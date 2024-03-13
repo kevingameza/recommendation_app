@@ -1,17 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import '../App.css';
 
-// Replace this with your actual data fetching logic
-const recommendedSongs = [
-  { id: 1, title: 'Song 1', artist: 'Artist 1', image: 'https://example.com/image1.jpg' },
-  { id: 2, title: 'Song 2', artist: 'Artist 2', image: 'https://example.com/image2.jpg' },
-  { id: 3, title: 'Song 3', artist: 'Artist 3', image: 'https://example.com/image3.jpg' },
-  // ... more songs
-];
-
 function Home() {
+
+  const [recommendedSongs, setRecommendedSongs] = useState([]);
+  const userId = localStorage.getItem('userId'); // Get user ID from local storage
+
+  useEffect(() => {
+    // Fetch recommendations only if userId exists
+    if (userId) {
+      const fetchRecommendations = async () => {
+        try {
+          const response = await fetch(`http://127.0.0.1:8000/user/${userId}/recommendations/`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch recommendations');
+          }
+          const data = await response.json();
+          setRecommendedSongs(data);
+        } catch (error) {
+          console.error('Error fetching recommendations:', error);
+          // Handle errors (display an error message to the user)
+        }
+      };
+
+      fetchRecommendations();
+    }
+  }, [userId]); // Re-run useEffect when userId changes
+
+
   return (
     <div className="home-view">
       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/2560px-Lastfm_logo.svg.png" alt="Last.fm Logo" className="logo" />

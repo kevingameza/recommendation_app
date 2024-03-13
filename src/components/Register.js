@@ -5,21 +5,29 @@ import './Register.css';
 import '../App.css';
 
 function Register() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const navigate = useNavigate(); 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('tests')
 
-    // Simulate registration logic (replace with actual API calls or backend logic)
     try {
-      // Perform registration actions (e.g., send data to a server)
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate delay
-      
-      // Upon success, navigate to /preferences
+      const response = await fetch('http://127.0.0.1:8000/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, country: 'Colombia', password: username }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Registration failed');
+      }
+
+      const data = await response.json();
+
+      // Save user ID in local storage
+      localStorage.setItem('userId', data.id);
+
       navigate('/preferences');
     } catch (error) {
-      // Handle registration errors
       console.error('Registration error:', error);
       // Display an error message to the user
     }
@@ -33,8 +41,8 @@ function Register() {
         <input
           type="user"
           placeholder="Username"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
         <button type="submit">Register</button>

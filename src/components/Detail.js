@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'; // Import specific icons
+
 import "./Detail.css"; // Import your styling
 import "../App.css";
 
@@ -29,7 +32,7 @@ function Detail(props) {
   }, [props]);
 
   const handleRateSong = (rating) => {
-    setSelectedRating(rating);
+    setSelectedRating(rating===selectedRating?null:rating);
 
     // Simulate sending rating to backend (replace with your actual API call)
     console.log(`Sending rating: ${rating} for song: ${song.id}`);
@@ -61,7 +64,7 @@ function Detail(props) {
             }`}
             onClick={() => handleRateSong("thumbsUp")}
           >
-            a
+            <i className="fas fa-thumbs-up"><FontAwesomeIcon icon={faThumbsUp} /></i>
           </button>
           <button
             type="button"
@@ -70,7 +73,7 @@ function Detail(props) {
             }`}
             onClick={() => handleRateSong("thumbsDown")}
           >
-            a
+            <i className="fas fa-thumbs-down"><FontAwesomeIcon icon={faThumbsDown} /> </i>
           </button>
         </div>
       </div>

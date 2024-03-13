@@ -22,7 +22,6 @@
 }
 
 .rating-widget {
-  display: flex; /* Arrange buttons horizontally */
   margin-top: 10px; /* Add some space above the rating widget */
 }
 
