@@ -20,7 +20,7 @@ function Register() {
       if (!response.ok) {
         throw new Error('Registration failed');
       }
-
+ 
       const data = await response.json();
 
       // Save user ID in local storage

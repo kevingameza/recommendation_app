@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useParams } from 'react-router-dom'; // Importar useParams
+
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'; // Import specific icons
 
 import "./Detail.css"; // Import your styling
@@ -25,11 +27,22 @@ function getSongDetails(songId) {
 function Detail(props) {
   const [song, setSong] = useState(null);
   const [selectedRating, setSelectedRating] = useState(null); // Track selected rating
+  const { songId } = useParams();
 
   useEffect(() => {
-    const songId = props.id;
     getSongDetails(songId).then((data) => setSong(data));
-  }, [props]);
+  }, [songId]);
+
+
+  async function getSongDetails(songId) {
+    const response = await fetch(`http://127.0.0.1:8000/songs/${songId}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch song details');
+    }
+    const songDetails = await response.json();
+    return songDetails; // Esto debería incluir todos los detalles necesarios de la canción
+  }
+  
 
   const handleRateSong = (rating) => {
     setSelectedRating(rating===selectedRating?null:rating);
