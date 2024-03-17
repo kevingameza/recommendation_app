@@ -4,8 +4,7 @@ import './Home.css';
 import '../App.css';
 
 function Home() {
-  const [recommendedSongs, setRecommendedSongs] = useState([]);
-  const [userNeighbors, setUserNeighbors] = useState([]);
+  const [recommendedSongs, setRecommendedSongs] = useState(null);
   const userId = localStorage.getItem('userId'); // Get user ID from local storage
 
   useEffect(() => {
@@ -24,7 +23,7 @@ function Home() {
               throw new Error('Failed to fetch song details');
             }
             const songDetails = await songResponse.json();
-            return { ...recomendation, ...songDetails }; // Combine the recommendation and detailed information
+            return { ...recomendation, title: songDetails.title }; // Combine the recommendation and detailed information
           }));
           setRecommendedSongs(songsWithDetails);
         } catch (error) {
@@ -55,6 +54,10 @@ function Home() {
     }
   }, [userId]); // Re-run useEffect when userId changes
 
+  if (!recommendedSongs) {
+    return <div className="detail-view">Loading...</div>;
+  }
+
   return (
     <div className="home-view">
       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/2560px-Lastfm_logo.svg.png" alt="Last.fm Logo" className="logo" />
@@ -64,9 +67,8 @@ function Home() {
       </div>
       <div className="song-grid">
         {recommendedSongs.map((song) => (
-          <Link to={`/songs/${song.item_id}`} key={song.item_id} className="song-card">
+          <Link to={`/songs/${song.id}`} key={song.id} className="song-card">
             <h3>{song.title}</h3>
-            <p>{song.artist}</p>
           </Link>
         ))}
       </div>
